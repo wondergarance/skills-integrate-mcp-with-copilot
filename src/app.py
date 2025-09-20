@@ -27,54 +27,54 @@ activities = {
         "max_participants": 12,
         "participants": ["michael@mergington.edu", "daniel@mergington.edu"]
     },
-    "Programming Class": {
-        "description": "Learn programming fundamentals and build software projects",
-        "schedule": "Tuesdays and Thursdays, 3:30 PM - 4:30 PM",
-        "max_participants": 20,
-        "participants": ["emma@mergington.edu", "sophia@mergington.edu"]
+    # ...existing code...
+}
+
+# --- User Profiles (students) ---
+students = {
+    "michael@mergington.edu": {
+        "name": "Michael Smith",
+        "grade": 11,
+        "interests": ["Chess", "Math", "Programming"]
     },
-    "Gym Class": {
-        "description": "Physical education and sports activities",
-        "schedule": "Mondays, Wednesdays, Fridays, 2:00 PM - 3:00 PM",
-        "max_participants": 30,
-        "participants": ["john@mergington.edu", "olivia@mergington.edu"]
-    },
-    "Soccer Team": {
-        "description": "Join the school soccer team and compete in matches",
-        "schedule": "Tuesdays and Thursdays, 4:00 PM - 5:30 PM",
-        "max_participants": 22,
-        "participants": ["liam@mergington.edu", "noah@mergington.edu"]
-    },
-    "Basketball Team": {
-        "description": "Practice and play basketball with the school team",
-        "schedule": "Wednesdays and Fridays, 3:30 PM - 5:00 PM",
-        "max_participants": 15,
-        "participants": ["ava@mergington.edu", "mia@mergington.edu"]
+    "emma@mergington.edu": {
+        "name": "Emma Johnson",
+        "grade": 10,
+        "interests": ["Programming", "Art"]
+    }
+    # ...ajoutez d'autres élèves ici...
+}
+
+# --- Organization Profiles ---
+organizations = {
+    "Chess Club": {
+        "description": "Chess enthusiasts club.",
+        "members": ["michael@mergington.edu"],
+        "contact": "chess@mergington.edu"
     },
     "Art Club": {
-        "description": "Explore your creativity through painting and drawing",
-        "schedule": "Thursdays, 3:30 PM - 5:00 PM",
-        "max_participants": 15,
-        "participants": ["amelia@mergington.edu", "harper@mergington.edu"]
-    },
-    "Drama Club": {
-        "description": "Act, direct, and produce plays and performances",
-        "schedule": "Mondays and Wednesdays, 4:00 PM - 5:30 PM",
-        "max_participants": 20,
-        "participants": ["ella@mergington.edu", "scarlett@mergington.edu"]
-    },
-    "Math Club": {
-        "description": "Solve challenging problems and participate in math competitions",
-        "schedule": "Tuesdays, 3:30 PM - 4:30 PM",
-        "max_participants": 10,
-        "participants": ["james@mergington.edu", "benjamin@mergington.edu"]
-    },
-    "Debate Team": {
-        "description": "Develop public speaking and argumentation skills",
-        "schedule": "Fridays, 4:00 PM - 5:30 PM",
-        "max_participants": 12,
-        "participants": ["charlotte@mergington.edu", "henry@mergington.edu"]
+        "description": "Art and creativity club.",
+        "members": ["emma@mergington.edu"],
+        "contact": "art@mergington.edu"
     }
+    # ...ajoutez d'autres organisations ici...
+}
+
+# --- Event Profiles ---
+events = {
+    1: {
+        "title": "Chess Tournament",
+        "date": "2025-10-10",
+        "organization": "Chess Club",
+        "participants": ["michael@mergington.edu"]
+    },
+    2: {
+        "title": "Art Expo",
+        "date": "2025-11-05",
+        "organization": "Art Club",
+        "participants": ["emma@mergington.edu"]
+    }
+    # ...ajoutez d'autres événements ici...
 }
 
 
@@ -83,9 +83,44 @@ def root():
     return RedirectResponse(url="/static/index.html")
 
 
+# --- Endpoints pour les profils ---
+
 @app.get("/activities")
 def get_activities():
     return activities
+
+@app.get("/students")
+def get_students():
+    """Retourne la liste des profils élèves"""
+    return students
+
+@app.get("/students/{email}")
+def get_student_profile(email: str):
+    if email not in students:
+        raise HTTPException(status_code=404, detail="Student not found")
+    return students[email]
+
+@app.get("/organizations")
+def get_organizations():
+    """Retourne la liste des organisations"""
+    return organizations
+
+@app.get("/organizations/{name}")
+def get_organization_profile(name: str):
+    if name not in organizations:
+        raise HTTPException(status_code=404, detail="Organization not found")
+    return organizations[name]
+
+@app.get("/events")
+def get_events():
+    """Retourne la liste des événements"""
+    return events
+
+@app.get("/events/{event_id}")
+def get_event_profile(event_id: int):
+    if event_id not in events:
+        raise HTTPException(status_code=404, detail="Event not found")
+    return events[event_id]
 
 
 @app.post("/activities/{activity_name}/signup")
